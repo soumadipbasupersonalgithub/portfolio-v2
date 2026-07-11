@@ -229,78 +229,65 @@
 }
 .photo-window .window { position: relative; }
 
-.photo-frame-pad { padding: 14px 14px 0; }
-.photo-frame {
+.online-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+/* Developer ID card: compact photo integrated with terminal-style info rows */
+.id-card {
+  display: flex;
+  align-items: stretch;
+  gap: 18px;
+  padding: 16px;
+}
+.id-photo {
   position: relative;
-  border-radius: 13px;
+  flex: none;
+  width: 148px;
+  border-radius: 12px;
   overflow: hidden;
   border: 1px solid var(--border);
   background: var(--surface2);
-}
-.photo-grid-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background-image:
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 26px 26px;
-  pointer-events: none;
-  mix-blend-mode: overlay;
+  box-shadow: 0 0 0 3px var(--glow), 0 14px 30px -14px rgba(0, 0, 0, .5);
 }
 .profile-image {
   display: block;
   width: 100%;
-  height: 228px;
+  height: 100%;
+  min-height: 168px;
   object-fit: cover;
-  object-position: center 22%;
+  object-position: center 20%;
+  filter: saturate(.88) contrast(1.05);
 }
-.corner { position: absolute; width: 20px; height: 20px; z-index: 3; }
-.corner.tl { top: 10px; left: 10px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); border-top-left-radius: 5px; }
-.corner.tr { top: 10px; right: 10px; border-top: 2px solid var(--accent); border-right: 2px solid var(--accent); border-top-right-radius: 5px; }
-.corner.bl { bottom: 10px; left: 10px; border-bottom: 2px solid var(--accent); border-left: 2px solid var(--accent); border-bottom-left-radius: 5px; }
-.corner.br { bottom: 10px; right: 10px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); border-bottom-right-radius: 5px; }
+.corner { position: absolute; width: 14px; height: 14px; z-index: 3; }
+.corner.tl { top: 7px; left: 7px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); border-top-left-radius: 4px; }
+.corner.tr { top: 7px; right: 7px; border-top: 2px solid var(--accent); border-right: 2px solid var(--accent); border-top-right-radius: 4px; }
+.corner.bl { bottom: 7px; left: 7px; border-bottom: 2px solid var(--accent); border-left: 2px solid var(--accent); border-bottom-left-radius: 4px; }
+.corner.br { bottom: 7px; right: 7px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); border-bottom-right-radius: 4px; }
 
-.photo-chip {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 11px;
-  border-radius: 20px;
-  background: color-mix(in srgb, var(--bg) 62%, transparent);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px solid var(--border);
-  font: 600 10.5px var(--font-mono);
-  color: var(--accent);
-}
-
-.photo-caption {
+.id-info {
+  flex: 1;
+  min-width: 0;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 16px 14px;
+  flex-direction: column;
+  justify-content: center;
 }
-.photo-caption-id { display: flex; flex-direction: column; gap: 2px; }
-.photo-name { font: 600 15px var(--font-sans); color: var(--text); }
-.photo-role { font: 500 11px var(--font-mono); color: var(--accent-ink); }
-.photo-loc-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 13px;
-  border-radius: 9px;
-  border: 1px solid var(--accent);
-  background: var(--surface2);
-  font: 600 11px var(--font-mono);
-  color: var(--accent-ink);
-  white-space: nowrap;
+.id-name { font: 700 19px var(--font-sans); letter-spacing: -.01em; color: var(--text); }
+.id-role { font: 500 11.5px var(--font-mono); color: var(--accent-ink); margin-top: 3px; }
+.id-sep { height: 1px; background: var(--line); margin: 12px 0; }
+.id-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font: 500 12px/1.9 var(--font-mono);
 }
+.id-key { color: var(--dim); min-width: 64px; }
+.id-val { color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.id-val.id-accent { color: var(--accent-ink); font-weight: 600; }
 
 /* Hero test console */
 .hero-console { background: var(--surface2); }

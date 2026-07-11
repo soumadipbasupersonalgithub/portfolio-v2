@@ -73,7 +73,9 @@
   .btn { padding: 13px 18px; font-size: 12.5px; }
   .hero-buttons { flex-direction: column; align-items: stretch; }
   .hero-buttons .btn { justify-content: center; white-space: nowrap; }
-  .profile-image { height: 205px; }
+  .id-card { gap: 14px; }
+  .id-photo { width: 128px; }
+  .id-key { min-width: 58px; }
 
   .footer-inner { justify-content: center; text-align: center; }
 
@@ -112,7 +114,9 @@
   .hero-title { font-size: 37px; }
   .nav-brand-name { font-size: 13.5px; }
   .hero-whoami { font-size: 12.5px; }
-  .profile-image { height: 185px; }
+  .id-photo { width: 112px; }
+  .profile-image { min-height: 148px; }
+  .id-name { font-size: 17px; }
 }
 
 /* Touch feedback for cards on touch devices */
