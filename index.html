@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="My Professional Portfolio - Showcasing my skills, projects, and experience">
+    <title>Soumadip portfolio</title>
+    <link rel="icon" type="image/svg+xml" href="/portfolio-icon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Inline script to prevent FOUC on theme -->
+    <script>
+      (function() {
+        // Dark by default on open; V2 uses its own storage key so a stale
+        // V1 'portfolio-theme' value can never override the default.
+        const theme = localStorage.getItem('portfolio-v2-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+  <body>
+
+    <!-- ============ NAV ============ -->
+    <nav class="nav" id="navbar">
+      <a href="#home" class="nav-brand">
+        <span class="nav-brand-mark">~</span>
+        <span class="nav-brand-name">soumadip<span class="accent">.qa</span></span>
+      </a>
+      <div class="nav-menu" id="navMenu">
+        <a data-nav="about" href="#about" class="nav-link">about</a>
+        <a data-nav="skills" href="#skills" class="nav-link">skills</a>
+        <a data-nav="work" href="#work" class="nav-link">work</a>
+        <a data-nav="projects" href="#projects" class="nav-link">projects</a>
+        <a data-nav="certifications" href="#certifications" class="nav-link">certs</a>
+        <a data-nav="contact" href="#contact" class="nav-link">contact</a>
+      </div>
+      <div class="nav-actions">
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+          <svg class="i-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+          <svg class="i-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"></path></svg>
+        </button>
+        <a href="soumadip_basu_cv.pdf" target="_blank" rel="noopener noreferrer" class="nav-resume">resume.pdf ↓</a>
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+          <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ============ HERO ============ -->
+    <section id="home" class="hero section">
+      <div class="hero-grid-bg" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <div class="hero-text">
+          <div class="hero-badge">
+            <span class="pulse-dot"></span>
+            welcome to my digital space
+          </div>
+          <div class="hero-kicker">// full stack qa · automation engineer</div>
+          <h1 class="hero-title">Soumadip<br>Basu</h1>
+          <div class="hero-sub">Full Stack QA · Consultant @ Deloitte · Bengaluru</div>
+
+          <div class="terminal-card hero-whoami">
+            <span class="t-dim">$</span> <span class="t-text">whoami</span><br>
+            <span class="t-accent">▸ </span><span id="typed" class="t-text2"></span><span class="typed-cursor"></span>
+          </div>
+
+          <div class="hero-buttons">
+            <a href="#projects" class="btn btn-primary">$ check_out_my_craft <span>→</span></a>
+            <a href="#contact" class="btn btn-secondary">$ get_in_touch</a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="hero-stat"><div class="hero-stat-num accent" data-count="6" data-suffix="+">6+</div><div class="hero-stat-label">years exp</div></div>
+            <div class="hero-stat"><div class="hero-stat-num" data-count="20" data-suffix="+">20+</div><div class="hero-stat-label">projects</div></div>
+            <div class="hero-stat"><div class="hero-stat-num" data-count="3">3</div><div class="hero-stat-label">companies</div></div>
+            <div class="hero-stat"><div class="hero-stat-num" data-count="7">7</div><div class="hero-stat-label">certs</div></div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="photo-window floaty">
+            <div class="photo-window-glow" aria-hidden="true"></div>
+            <div class="window">
+              <div class="window-bar">
+                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                <span class="window-title">~/profile.jpg</span>
+                <span class="window-meta">1200×1200</span>
+              </div>
+              <div class="photo-frame-pad">
+                <div class="photo-frame">
+                  <div class="photo-grid-overlay" aria-hidden="true"></div>
+                  <img src="/image.jpg" alt="Soumadip Basu — professional photo" class="profile-image">
+                  <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+                  <span class="photo-chip"><span class="pulse-dot"></span>online</span>
+                </div>
+              </div>
+              <div class="photo-caption">
+                <div class="photo-caption-id">
+                  <span class="photo-name">Soumadip Basu</span>
+                  <span class="photo-role">Full Stack QA · Automation</span>
+                </div>
+                <span class="photo-loc-chip">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  Bengaluru, IN
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div id="heroConsole" class="window hero-console">
+            <div class="window-bar">
+              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+              <span class="window-title">npm run test:e2e — playwright</span>
+            </div>
+            <div class="hero-console-body">
+              <div class="t-dim">$ npx playwright test</div>
+              <div id="runBody" class="run-body"></div>
+              <div class="run-bar-track"><div id="runBar" class="run-bar"></div></div>
+              <div class="run-note">coverage <span class="accent">94%</span> · statements</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section id="about" class="section container">
+      <div class="section-head" data-reveal="up">
+        <div class="section-path">~/about</div>
+        <div class="section-title-row">
+          <h2 class="section-title">About Me</h2>
+          <span class="section-rule"></span>
+          <span class="section-cmd">cat about.md</span>
+        </div>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-copy" data-reveal="up">
+          <p class="about-p"><strong>Quality Assurance Professional</strong> with <strong>Bachelor's &amp; Diploma in Electronics &amp; Communications Engineering</strong> from Maulana Abul Kalam Azad University of Technology in 2017. Specializing in automated test scripts writing for mobile and web applications.</p>
+          <p class="about-p">My career has evolved from <strong>functional testing and quality validation</strong> at Sonim Technologies to architecting comprehensive automation frameworks at Alethea Communication Pvt Ltd, and currently advancing to develop sophisticated automation solutions while integrating <strong class="accent-ink">cutting-edge Generative AI technologies</strong> for intelligent test case generation, synthetic data creation, and workflow optimization to maximize testing efficiency and reliability.</p>
+          <p class="about-p">Expert in transforming testing processes through automation frameworks under agile methodologies, and integrating technologies &amp; tools in testing to deliver bulletproof software solutions.</p>
+
+          <a href="soumadip_basu_cv.pdf" target="_blank" rel="noopener noreferrer" class="resume-card">
+            <span class="resume-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            </span>
+            <span class="resume-card-text">
+              <span class="resume-card-title">Professional Resume</span>
+              <span class="resume-card-sub">View my professional journey, skills &amp; achievements</span>
+            </span>
+            <span class="resume-card-cta">view ↗</span>
+          </a>
+        </div>
+
+        <div class="window about-json" data-reveal="up">
+          <div class="window-bar">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            <span class="window-title">about.json</span>
+          </div>
+          <div class="about-json-body">
+            <div class="t-dim">{</div>
+            <div class="json-row"><span class="json-key">"role"</span><span class="t-dim">:</span> <span class="json-val">"Full Stack QA"</span><span class="t-dim">,</span></div>
+            <div class="json-row"><span class="json-key">"company"</span><span class="t-dim">:</span> <span class="json-val">"Deloitte"</span><span class="t-dim">,</span></div>
+            <div class="json-row"><span class="json-key">"location"</span><span class="t-dim">:</span> <span class="json-val">"Bengaluru, IN"</span><span class="t-dim">,</span></div>
+            <div class="json-row"><span class="json-key">"experience"</span><span class="t-dim">:</span> <span class="json-accent">"6+ yrs"</span><span class="t-dim">,</span></div>
+            <div class="json-row"><span class="json-key">"education"</span><span class="t-dim">:</span> <span class="json-val">"B.Tech &amp; Diploma, ECE · MAKAUT '17"</span><span class="t-dim">,</span></div>
+            <div class="json-row"><span class="json-key">"focus"</span><span class="t-dim">:</span> <span class="json-val">"Gen-AI in QA"</span><span class="t-dim">,</span></div>
+            <div class="json-row"><span class="json-key">"projects"</span><span class="t-dim">:</span> <span class="json-accent">"20+"</span></div>
+            <div class="t-dim">}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SKILLS ============ -->
+    <section id="skills" class="section container">
+      <div class="section-head" data-reveal="up">
+        <div class="section-path">~/skills</div>
+        <div class="section-title-row">
+          <h2 class="section-title">Skills &amp; Technologies</h2>
+          <span class="section-rule"></span>
+          <span class="section-cmd">6 domains</span>
+        </div>
+        <p class="section-subtitle">Crafting quality through innovative testing solutions</p>
+      </div>
+
+      <div class="skills-grid">
+        <div class="skill-card lift" data-reveal="up">
+          <div class="skill-num">01</div>
+          <h3 class="skill-title">Test Automation</h3>
+          <p class="skill-desc">Playwright, WebdriverIO, Robot Framework, Appium, Selenium, Katalon Studio</p>
+        </div>
+        <div class="skill-card lift" data-reveal="up">
+          <div class="skill-num">02</div>
+          <h3 class="skill-title">Programming Languages</h3>
+          <p class="skill-desc">JavaScript, Python, TypeScript</p>
+        </div>
+        <div class="skill-card lift" data-reveal="up">
+          <div class="skill-num">03</div>
+          <h3 class="skill-title">Mobile &amp; Web Testing</h3>
+          <p class="skill-desc">Cross-platform testing, API testing, UI/UX validation</p>
+        </div>
+        <div class="skill-card lift" data-reveal="up">
+          <div class="skill-num">04</div>
+          <h3 class="skill-title">Quality Assurance</h3>
+          <p class="skill-desc">Test Strategy, Planning, Risk Analysis, Defect Management, SDLC &amp; STLC Process Optimization</p>
+        </div>
+        <div class="skill-card lift" data-reveal="up">
+          <div class="skill-num">05</div>
+          <h3 class="skill-title">Specialized Testing</h3>
+          <p class="skill-desc">Gen AI integration with MCP in testing process, Prompt Engineering, Automation, Performance, Functional, Accessibility</p>
+        </div>
+        <div class="skill-card lift" data-reveal="up">
+          <div class="skill-num">06</div>
+          <h3 class="skill-title">Collaboration Tools</h3>
+          <p class="skill-desc">JIRA, Git, Bugzilla, TestRail, Confluence</p>
+        </div>
+      </div>
+
+      <div class="stack-cloud" data-reveal="up">
+        <div class="stack-cloud-label">tech_stack --all</div>
+        <div class="stack-chips">
+          <span class="chip">Playwright</span>
+          <span class="chip">WebdriverIO</span>
+          <span class="chip">Robot Framework</span>
+          <span class="chip">Appium</span>
+          <span class="chip">Selenium</span>
+          <span class="chip">Katalon Studio</span>
+          <span class="chip">JavaScript</span>
+          <span class="chip">Python</span>
+          <span class="chip">TypeScript</span>
+          <span class="chip">Postman</span>
+          <span class="chip">Locust</span>
+          <span class="chip">Cucumber</span>
+          <span class="chip">JIRA</span>
+          <span class="chip">Git</span>
+          <span class="chip">Bugzilla</span>
+          <span class="chip">TestRail</span>
+          <span class="chip">Confluence</span>
+          <span class="chip">MCP · Gen-AI</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EXPERIENCE ============ -->
+    <section id="work" class="section container">
+      <div class="section-head" data-reveal="up">
+        <div class="section-path">~/experience</div>
+        <div class="section-title-row">
+          <h2 class="section-title">Work Experience</h2>
+          <span class="section-rule"></span>
+          <span class="section-cmd">git log --author</span>
+        </div>
+      </div>
+
+      <div class="window pipeline" data-reveal="up">
+        <div class="pipeline-head">
+          <span class="pipeline-name">ci-pipeline · main</span>
+          <span class="pipeline-status"><span class="pulse-dot"></span>running</span>
+        </div>
+        <div class="pipeline-track">
+          <div data-stage class="stage"><span data-dot class="stage-dot"></span><span class="stage-label">checkout</span></div>
+          <span class="stage-link"></span>
+          <div data-stage class="stage"><span data-dot class="stage-dot"></span><span class="stage-label">install</span></div>
+          <span class="stage-link"></span>
+          <div data-stage class="stage"><span data-dot class="stage-dot"></span><span class="stage-label">build</span></div>
+          <span class="stage-link"></span>
+          <div data-stage class="stage"><span data-dot class="stage-dot"></span><span class="stage-label">test</span></div>
+          <span class="stage-link"></span>
+          <div data-stage class="stage"><span data-dot class="stage-dot"></span><span class="stage-label">report</span></div>
+          <span class="stage-link"></span>
+          <div data-stage class="stage"><span data-dot class="stage-dot"></span><span class="stage-label">deploy</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-hint">// click a role to expand</div>
+      <div class="timeline">
+        <div class="timeline-rail" aria-hidden="true"></div>
+        <div class="timeline-items">
+
+          <div data-exp class="exp">
+            <span data-exp-dot class="exp-dot"></span>
+            <div class="exp-head">
+              <span class="exp-years">2021 — Present</span>
+              <span class="exp-company">Deloitte</span>
+              <span class="exp-role">Consultant &amp; Ex Analyst</span>
+            </div>
+            <div data-exp-detail class="exp-detail">
+              <p class="exp-p">Developing sophisticated automation solutions while integrating cutting-edge Generative AI technologies for intelligent test case generation, synthetic data creation, and workflow optimization. QA for a healthcare SDK with BLE smart-device connectivity, the healthcare mobile suite (Madelyn, Hypercare, Logbook) and the Dotcom enterprise web platform on Adobe Experience Manager — including WCAG accessibility compliance testing and AI agent-driven automation with MCP server integration.</p>
+              <div class="tag-row">
+                <span class="tag">Playwright</span><span class="tag">WebdriverIO</span><span class="tag">Appium</span><span class="tag">JavaScript</span><span class="tag">Gen-AI / MCP</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-exp class="exp">
+            <span data-exp-dot class="exp-dot"></span>
+            <div class="exp-head">
+              <span class="exp-years">2020 — 2021</span>
+              <span class="exp-company">Alethea Communication</span>
+              <span class="exp-role">QA Automation Engineer</span>
+            </div>
+            <div data-exp-detail class="exp-detail">
+              <p class="exp-p">Built a robust automation framework from scratch using Python and Robot Framework, and developed a performance testing suite using Python and Locust for Cloud ATF — an advanced automated solution for WLAN and broadband technologies with scalable infrastructure for WiFi 6 protocol validation. Also updated automation code in JavaScript using Katalon Studio for the SMS Autosense industrial monitoring app.</p>
+              <div class="tag-row">
+                <span class="tag">Robot Framework</span><span class="tag">Python</span><span class="tag">Locust</span><span class="tag">Katalon Studio</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-exp class="exp">
+            <span data-exp-dot class="exp-dot"></span>
+            <div class="exp-head">
+              <span class="exp-years">2019 — 2020</span>
+              <span class="exp-company">Sonim Technologies</span>
+              <span class="exp-role">QA Engineer</span>
+            </div>
+            <div data-exp-detail class="exp-detail">
+              <p class="exp-p">Comprehensive functional testing of rugged Android smartphones (XP8 &amp; XP5) across multiple US mobile device variants. Executed functional and sprint testing protocols for industrial-grade mobile devices &amp; accessories, covering Bluetooth, Satellite Network, GPS, Camera and Audio.</p>
+              <div class="tag-row">
+                <span class="tag">Android</span><span class="tag">Functional Testing</span><span class="tag">Bluetooth</span><span class="tag">GPS</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROJECTS ============ -->
+    <section id="projects" class="section container">
+      <div class="section-head" data-reveal="up">
+        <div class="section-path">~/projects</div>
+        <div class="section-title-row">
+          <h2 class="section-title">Featured Projects</h2>
+          <span class="section-rule"></span>
+          <span class="section-cmd">6 repos</span>
+        </div>
+        <p class="section-subtitle">Some of my recent works</p>
+      </div>
+
+      <div class="filter-row" data-reveal="up">
+        <span data-filter="all" class="filter-chip">All</span>
+        <span data-filter="framework" class="filter-chip">Frameworks</span>
+        <span data-filter="web" class="filter-chip">Web</span>
+        <span data-filter="mobile" class="filter-chip">Mobile</span>
+      </div>
+
+      <div class="projects-grid">
+
+        <div data-cat="framework" class="project-card lift" data-reveal="up">
+          <div class="project-banner">
+            <div class="banner-grid" aria-hidden="true"></div>
+            <span class="banner-badge">SDK</span>
+          </div>
+          <div class="project-body">
+            <div class="project-cat">Framework · BLE</div>
+            <h3 class="project-title">SDK Validation Framework</h3>
+            <p class="project-desc">A backend SDK framework designed for various patient-facing applications UI, facilitating smart device connectivity and synchronization of medicine records using Bluetooth Low Energy (BLE) technology.</p>
+            <button class="project-link" data-project="healthcare-frameworks">view_details →</button>
+          </div>
+        </div>
+
+        <div data-cat="mobile" class="project-card lift" data-reveal="up">
+          <div class="project-banner">
+            <div class="banner-grid" aria-hidden="true"></div>
+            <span class="banner-badge">Health</span>
+          </div>
+          <div class="project-body">
+            <div class="project-cat">Mobile · Healthcare</div>
+            <h3 class="project-title">Hypercare, Madelyn &amp; Logbook</h3>
+            <p class="project-desc">A suite of Healthcare mobile applications for medicine record management and patient health monitoring, with automated tracking and reporting features.</p>
+            <button class="project-link" data-project="healthcare-suite">view_details →</button>
+          </div>
+        </div>
+
+        <div data-cat="web" class="project-card lift" data-reveal="up">
+          <div class="project-banner">
+            <div class="banner-grid" aria-hidden="true"></div>
+            <span class="banner-badge">Web</span>
+          </div>
+          <div class="project-body">
+            <div class="project-cat">Web · Enterprise</div>
+            <h3 class="project-title">Dotcom</h3>
+            <p class="project-desc">An enterprise healthcare web portal designed for patients to access reliable information about a wide range of health and care services. The platform features detailed resources on multiple diseases, including their care options, various medications, and support services.</p>
+            <button class="project-link" data-project="dotcom">view_details →</button>
+          </div>
+        </div>
+
+        <div data-cat="framework" class="project-card lift" data-reveal="up">
+          <div class="project-banner">
+            <div class="banner-grid" aria-hidden="true"></div>
+            <span class="banner-badge">Cloud</span>
+          </div>
+          <div class="project-body">
+            <div class="project-cat">Framework · WLAN</div>
+            <h3 class="project-title">Cloud ATF</h3>
+            <p class="project-desc">An advanced automated solution for WLAN and broadband technologies with high-volume device testing refers to a comprehensive platform designed to rigorously test wireless (Wi-Fi, WLAN) and broadband (wireless broadband, gateways, routers) devices at scale.</p>
+            <button class="project-link" data-project="cloud-atf">view_details →</button>
+          </div>
+        </div>
+
+        <div data-cat="mobile" class="project-card lift" data-reveal="up">
+          <div class="project-banner">
+            <div class="banner-grid" aria-hidden="true"></div>
+            <span class="banner-badge">ML</span>
+          </div>
+          <div class="project-body">
+            <div class="project-cat">Mobile · Industrial ML</div>
+            <h3 class="project-title">SMS Autosense</h3>
+            <p class="project-desc">A machine learning-driven mobile application for industrial environments enables continuous monitoring, tracking, and reporting of machine controller APIs &amp; industrial sensor feeds (e.g., temperature, vibration, error codes, operating hours).</p>
+            <button class="project-link" data-project="sms-autosense">view_details →</button>
+          </div>
+        </div>
+
+        <div data-cat="mobile" class="project-card lift" data-reveal="up">
+          <div class="project-banner">
+            <div class="banner-grid" aria-hidden="true"></div>
+            <span class="banner-badge">Mobile</span>
+          </div>
+          <div class="project-body">
+            <div class="project-cat">Mobile · Rugged</div>
+            <h3 class="project-title">XP8 &amp; XP5</h3>
+            <p class="project-desc">Rugged Android smartphones designed for critical industrial environments are engineered to withstand extreme conditions, such as shock, drop, temperature fluctuations, vibration, and exposure to dust and water. These devices typically feature military-grade durability certifications.</p>
+            <button class="project-link" data-project="mobile-devices">view_details →</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ CERTIFICATIONS ============ -->
+    <section id="certifications" class="section container">
+      <div class="section-head" data-reveal="up">
+        <div class="section-path">~/certifications</div>
+        <div class="section-title-row">
+          <h2 class="section-title">Professional Certifications</h2>
+          <span class="section-rule"></span>
+          <span class="section-cmd">7 verified</span>
+        </div>
+        <p class="section-subtitle">Validated expertise and continuous learning journey</p>
+      </div>
+
+      <div class="certs-grid">
+
+        <div class="cert-card lift" data-reveal="up">
+          <div class="cert-top">
+            <span class="cert-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="m8.5 12 2.5 2.5 5-5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </span>
+            <span class="cert-verified">✓ verified</span>
+          </div>
+          <h3 class="cert-title">Playwright 101 Certification</h3>
+          <div class="cert-issuer">TestMu AI</div>
+          <p class="cert-desc">Playwright 101 certification validating proficiency in modern end-to-end browser automation testing with Playwright.</p>
+          <div class="cert-foot">
+            <span class="cert-dates">Mar 2026 · to Mar 2028</span>
+            <span class="cert-actions">
+              <a href="https://www.testmuai.com/certified/P101-3593BG/" target="_blank" rel="noopener noreferrer" class="cert-view">view ↗</a>
+              <button class="cert-verify-btn" data-cert-id="playwright-001">verify ✓</button>
+            </span>
+          </div>
+        </div>
+
+        <div class="cert-card lift" data-reveal="up">
+          <div class="cert-top">
+            <span class="cert-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="m8.5 12 2.5 2.5 5-5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </span>
+            <span class="cert-verified">✓ verified</span>
+          </div>
+          <h3 class="cert-title">Learn Java Script</h3>
+          <div class="cert-issuer">Codecademy</div>
+          <p class="cert-desc">Foundational understanding of JavaScript language concepts.</p>
+          <div class="cert-foot">
+            <span class="cert-dates">Jun 2023 · no expiry</span>
+            <span class="cert-actions">
+              <a href="https://www.codecademy.com/profiles/tag5735900943/certificates/705dcb15de0da4dd9d9fc4f3274b430e" target="_blank" rel="noopener noreferrer" class="cert-view">view ↗</a>
+              <button class="cert-verify-btn" data-cert-id="codeacademy-001">verify ✓</button>
+            </span>
+          </div>
+        </div>
+
+        <div class="cert-card lift" data-reveal="up">
+          <div class="cert-top">
+            <span class="cert-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="m8.5 12 2.5 2.5 5-5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </span>
+            <span class="cert-verified">✓ verified</span>
+          </div>
+          <h3 class="cert-title">Robot Framework with Python-Selenium API Automation Testing</h3>
+          <div class="cert-issuer">Udemy</div>
+          <p class="cert-desc">Advanced certification course of end-to-end automation with the Python 3 &amp; Robot Framework, covering keyword-driven UI and API testing.</p>
+          <div class="cert-foot">
+            <span class="cert-dates">May 2024 · no expiry</span>
+            <span class="cert-actions">
+              <a href="https://www.udemy.com/certificate/UC-c2dcfc91-df9c-4fc1-a502-ef4b1940e034/" target="_blank" rel="noopener noreferrer" class="cert-view">view ↗</a>
+              <button class="cert-verify-btn" data-cert-id="istqb-001">verify ✓</button>
+            </span>
+          </div>
+        </div>
+
+        <div class="cert-card lift" data-reveal="up">
+          <div class="cert-top">
+            <span class="cert-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="m8.5 12 2.5 2.5 5-5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </span>
+            <span class="cert-verified">✓ verified</span>
+          </div>
+          <h3 class="cert-title">Learn Python 3</h3>
+          <div class="cert-issuer">Codecademy</div>
+          <p class="cert-desc">Comprehensive Python v3 programming course covering basics to advanced topics.</p>
+          <div class="cert-foot">
+            <span class="cert-dates">Apr 2024 · no expiry</span>
+            <span class="cert-actions">
+              <a href="https://www.codecademy.com/profiles/tag5735900943/certificates/6c152bd262967f8c941c9707ed636bda" target="_blank" rel="noopener noreferrer" class="cert-view">view ↗</a>
+              <button class="cert-verify-btn" data-cert-id="python-001">verify ✓</button>
+            </span>
+          </div>
+        </div>
+
+        <div class="cert-card lift" data-reveal="up">
+          <div class="cert-top">
+            <span class="cert-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="m8.5 12 2.5 2.5 5-5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </span>
+            <span class="cert-verified">✓ verified</span>
+          </div>
+          <h3 class="cert-title">WebDriverIO + Node.js - JavaScript UI Automation from Scratch</h3>
+          <div class="cert-issuer">Udemy</div>
+          <p class="cert-desc">A comprehensive automation testing course focused on UI &amp; functionality validation using WebDriverIO, Node.js, and JavaScript.</p>
+          <div class="cert-foot">
+            <span class="cert-dates">Jun 2023 · no expiry</span>
+            <span class="cert-actions">
+              <a href="https://www.udemy.com/certificate/UC-4ea0c12b-e958-4337-82a5-d4e8aebd8bc8/" target="_blank" rel="noopener noreferrer" class="cert-view">view ↗</a>
+              <button class="cert-verify-btn" data-cert-id="automation-001">verify ✓</button>
+            </span>
+          </div>
+        </div>
+
+        <div class="cert-card lift" data-reveal="up">
+          <div class="cert-top">
+            <span class="cert-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="m8.5 12 2.5 2.5 5-5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </span>
+            <span class="cert-verified">✓ verified</span>
+          </div>
+          <h3 class="cert-title">Learn Git &amp; GitHub Course</h3>
+          <div class="cert-issuer">Codecademy</div>
+          <p class="cert-desc">A comprehensive Git course to integrate Git and GitHub and manage versions of projects using Git branches.</p>
+          <div class="cert-foot">
+            <span class="cert-dates">May 2024 · no expiry</span>
+            <span class="cert-actions">
+              <a href="https://www.codecademy.com/profiles/tag5735900943/certificates/a8ab218d5950c29861635cc0bf12fd13" target="_blank" rel="noopener noreferrer" class="cert-view">view ↗</a>
+              <button class="cert-verify-btn" data-cert-id="git-001">verify ✓</button>
+            </span>
+          </div>
+        </div>
+
+        <div class="cert-card lift" data-reveal="up">
+          <div class="cert-top">
+            <span class="cert-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="m8.5 12 2.5 2.5 5-5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </span>
+            <span class="cert-verified">✓ verified</span>
+          </div>
+          <h3 class="cert-title">Gen AI and AI agent integration in software testing</h3>
+          <div class="cert-issuer">Udemy</div>
+          <p class="cert-desc">A comprehensive course on integrating Generative AI and AI agents into software testing processes.</p>
+          <div class="cert-foot">
+            <span class="cert-dates">Sep 2025 · no expiry</span>
+            <span class="cert-actions">
+              <button class="cert-verify-btn" data-cert-id="ai-001">verify ✓</button>
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" class="section container">
+      <div class="section-head" data-reveal="up">
+        <div class="section-path">~/contact</div>
+        <div class="section-title-row">
+          <h2 class="section-title">Let's Work Together</h2>
+          <span class="section-rule"></span>
+        </div>
+        <p class="section-subtitle">Let's connect and build something amazing together</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-left" data-reveal="up">
+          <h3 class="contact-pitch">Let's build bulletproof software together.</h3>
+          <div class="contact-cta-row">
+            <a href="mailto:soumadipbasu333@gmail.com" class="btn btn-primary">$ send_email</a>
+            <a href="soumadip_basu_cv.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">résumé.pdf ↓</a>
+          </div>
+
+          <div class="window contact-info-window">
+            <div class="window-bar">
+              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+              <span class="window-title">contact --info</span>
+            </div>
+            <div class="contact-info-body">
+              <div class="contact-line"><span class="t-accent">▸</span> <span class="contact-key">email</span> <a href="mailto:soumadipbasu333@gmail.com" class="contact-val">soumadipbasu333@gmail.com</a></div>
+              <div class="contact-line"><span class="t-accent">▸</span> <span class="contact-key">phone</span> <a href="tel:+919851824880" class="contact-val">+91 9851824880</a></div>
+              <div class="contact-line"><span class="t-accent">▸</span> <span class="contact-key">location</span> <span class="contact-val">Bengaluru, India</span></div>
+              <div class="contact-socials">
+                <a href="https://www.linkedin.com/in/soumadip-basu-b47160197/" target="_blank" rel="noopener noreferrer" class="social-btn" id="linkedin-link" aria-label="LinkedIn">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.76-2.05C20.4 8.65 21 11 21 14.1V21h-4v-6.1c0-1.45-.03-3.3-2-3.3-2 0-2.3 1.57-2.3 3.2V21H9z"></path></svg>
+                  LinkedIn
+                </a>
+                <a href="https://github.com/soumadipbasupersonalgithub" target="_blank" rel="noopener noreferrer" class="social-btn" id="github-link" aria-label="GitHub">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.85 9.73.5.1.68-.22.68-.49l-.01-1.7c-2.79.62-3.38-1.37-3.38-1.37-.46-1.19-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.94.85.09-.66.35-1.12.63-1.38-2.23-.26-4.57-1.14-4.57-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.05a9.4 9.4 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9l-.01 2.82c0 .27.18.6.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"></path></svg>
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="window contact-form-window" data-reveal="up">
+          <div class="window-bar">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            <span class="window-title">1:1 connect — new_message</span>
+          </div>
+          <div class="contact-form-body">
+            <p class="form-subtitle">Drop a message &amp; let's start the conversation</p>
+            <form class="contact-form" id="contact-form">
+              <div class="form-group">
+                <label class="form-label" for="name">$ name</label>
+                <input type="text" id="name" name="from_name" placeholder="Your Name" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="email">$ email</label>
+                <input type="email" id="email" name="from_email" placeholder="Your Email" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="message">$ message</label>
+                <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary form-submit">
+                <span class="btn-text">$ send --now</span>
+                <span class="btn-loading" style="display: none;">sending<span class="ellipsis"></span></span>
+              </button>
+              <div id="form-status" class="form-status" role="status"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-brand"><span class="accent">~</span> <span>soumadip<span class="accent">.qa</span></span></div>
+        <div class="footer-copy">© 2025 Soumadip Basu · All rights reserved · Crafting quality through innovation</div>
+        <a href="#home" class="footer-top">↑ back to top</a>
+      </div>
+    </footer>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="modal" aria-hidden="true">
+      <div class="modal-content window">
+        <div class="window-bar modal-bar">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="window-title">project --details</span>
+          <button class="close modal-close" aria-label="Close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="modalContent"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating CV Download Button -->
+    <div class="cv-fab">
+      <a href="soumadip_basu_cv.pdf" class="fab-button" download="Soumadip_Basu_Resume.pdf" title="Download Resume">
+        <svg class="fab-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7,10 12,15 17,10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        <span class="fab-text">resume</span>
+      </a>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"/>
+      </svg>
+    </button>
+
+    <!-- ============ AI CHATBOT ============ -->
+    <button class="chatbot-fab" id="chatbotFab" aria-label="Open AI Assistant">
+      <span class="chatbot-fab-ring" aria-hidden="true"></span>
+      <span class="chatbot-fab-core">
+        <svg class="chatbot-fab-icon" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 8V4H8"/>
+          <rect x="4" y="8" width="16" height="12" rx="3"/>
+          <path d="M2 14h2M20 14h2"/>
+          <path d="M9 13v1M15 13v1"/>
+          <path d="M9.5 17a3.5 3.5 0 0 0 5 0"/>
+        </svg>
+      </span>
+      <span class="chatbot-fab-badge">AI</span>
+    </button>
+
+    <div class="chatbot-backdrop" id="chatbotBackdrop"></div>
+
+    <div class="chatbot-window" id="chatbotWindow" role="dialog" aria-label="AI Assistant">
+      <div class="chatbot-header">
+        <div class="chatbot-header-dots" aria-hidden="true">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        </div>
+        <div class="chatbot-header-info">
+          <div class="chatbot-avatar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 8V4H8"/>
+              <rect x="4" y="8" width="16" height="12" rx="3"/>
+              <path d="M9 13v1M15 13v1"/>
+              <path d="M9.5 17a3.5 3.5 0 0 0 5 0"/>
+            </svg>
+          </div>
+          <div class="chatbot-header-meta">
+            <h4 class="chatbot-header-title">soumadip-ai — assistant</h4>
+            <span class="chatbot-header-status"><span class="pulse-dot"></span>powered by Gemini</span>
+          </div>
+        </div>
+        <button class="chatbot-close" id="chatbotClose" aria-label="Close chat">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="chatbot-messages" id="chatbotMessages">
+        <div class="chatbot-welcome">
+          <div class="chatbot-welcome-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 8V4H8"/>
+              <rect x="4" y="8" width="16" height="12" rx="3"/>
+              <path d="M2 14h2M20 14h2"/>
+              <path d="M9 13v1M15 13v1"/>
+              <path d="M9.5 17a3.5 3.5 0 0 0 5 0"/>
+            </svg>
+          </div>
+          <h3 class="chatbot-welcome-title">Hi! I'm Soumadip's AI Assistant</h3>
+          <p class="chatbot-welcome-text">Ask me anything about Soumadip's experience, skills, projects, or certifications!</p>
+        </div>
+      </div>
+
+      <div class="chatbot-starters" id="chatbotStarters">
+        <button class="chatbot-starter-btn" data-question="What are Soumadip's technical skills and tools expertise?">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Skills &amp; Expertise
+        </button>
+        <button class="chatbot-starter-btn" data-question="What is Soumadip's educational background?">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5"/></svg>
+          Education
+        </button>
+        <button class="chatbot-starter-btn" data-question="How many successful projects has Soumadip handled and what are they about?">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Projects
+        </button>
+        <button class="chatbot-starter-btn" data-question="How can I contact Soumadip? What are his contact details?">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Contact
+        </button>
+        <button class="chatbot-starter-btn" data-question="What professional certifications does Soumadip hold?">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+          Certifications
+        </button>
+        <button class="chatbot-starter-btn" data-question="A brief summary of the Portfolio">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Portfolio Summary
+        </button>
+      </div>
+
+      <div class="chatbot-input-area">
+        <div class="chatbot-input-wrapper">
+          <span class="chatbot-prompt" aria-hidden="true">&gt;_</span>
+          <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Ask me about Soumadip..." autocomplete="off" />
+          <button class="chatbot-send" id="chatbotSend" aria-label="Send message">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+        <span class="chatbot-disclaimer">AI-powered responses based on portfolio data</span>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
