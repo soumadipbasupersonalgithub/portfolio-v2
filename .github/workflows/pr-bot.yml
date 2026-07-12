@@ -1,0 +1,96 @@
+# PR bot: labels every pull request by size and touched areas, and maintains
+# a single sticky comment explaining the quality gate and tracking basics.
+# Runs as github-actions[bot] with the built-in token — no secrets needed.
+name: PR Bot
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const { owner, repo } = context.repo;
+
+            // ---------- size + area labels ----------
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner, repo, pull_number: pr.number, per_page: 100,
+            });
+
+            const changed = files.reduce((n, f) => n + f.additions + f.deletions, 0);
+            const size =
+              changed < 50 ? 'size/XS' :
+              changed < 200 ? 'size/S' :
+              changed < 700 ? 'size/M' :
+              changed < 2000 ? 'size/L' : 'size/XL';
+
+            const areas = new Set();
+            for (const f of files) {
+              const p = f.filename;
+              if (p.startsWith('tests/') || p === 'playwright.config.ts') areas.add('area/tests');
+              if (p === 'Jenkinsfile' || p.startsWith('.github/') || p === 'lighthouserc.cjs' || p.startsWith('scripts/')) areas.add('area/ci');
+              if (p.startsWith('docs/') || p === 'README.md') areas.add('area/docs');
+              if (p.startsWith('src/') || p === 'index.html' || p.startsWith('public/')) areas.add('area/site');
+            }
+
+            const wanted = [size, ...areas];
+            const palette = {
+              'size/XS': '3ECF8E', 'size/S': '9BE8C4', 'size/M': 'E8B33C',
+              'size/L': 'E88B3C', 'size/XL': 'E06456',
+              'area/tests': '5B9DE8', 'area/ci': '8A63D2', 'area/docs': '6E7B8B', 'area/site': '2EA043',
+            };
+
+            // Create any missing labels (idempotent), then sync size/* labels.
+            for (const name of wanted) {
+              try {
+                await github.rest.issues.createLabel({ owner, repo, name, color: palette[name] ?? 'CCCCCC' });
+              } catch (e) { if (e.status !== 422) throw e; } // 422 = already exists
+            }
+            const current = pr.labels.map(l => l.name);
+            for (const stale of current.filter(n => n.startsWith('size/') && n !== size)) {
+              await github.rest.issues.removeLabel({ owner, repo, issue_number: pr.number, name: stale })
+                .catch(() => {});
+            }
+            await github.rest.issues.addLabels({ owner, repo, issue_number: pr.number, labels: wanted });
+
+            // ---------- sticky quality-gate comment ----------
+            const marker = '<!-- portfolio-v2-pr-bot -->';
+            const body = [
+              marker,
+              `### 🚦 Quality gate for this PR`,
+              ``,
+              `Hi @${pr.user.login} — this PR is **${size.replace('size/', '')}** ` +
+              `(${changed} changed lines across ${files.length} files). Here's what happens next:`,
+              ``,
+              `| Check | What it does |`,
+              `|---|---|`,
+              `| \`ci/jenkins/quality-gate\` | Builds this branch, runs **105 Playwright functional tests** (desktop/tablet/mobile), **24 visual comparisons**, and **Lighthouse** thresholds. Required to merge. |`,
+              `| Claude review | AI code review posts inline comments shortly after the PR opens. |`,
+              ``,
+              `**If the gate goes red:** open the Jenkins build linked from the failed check — the ` +
+              `Playwright and Lighthouse HTML reports show exactly what broke. Intentional UI change? ` +
+              `Update the visual baselines (\`npm run test:update-snapshots\`) and commit them.`,
+              ``,
+              `📖 [How the whole pipeline works](../blob/main/docs/workflow-guide.html) · ` +
+              `[README §CI/CD](../blob/main/README.md#cicd-quality-gate--the-workflow)`,
+            ].join('\n');
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner, repo, issue_number: pr.number, per_page: 100,
+            });
+            const mine = comments.find(c => c.body && c.body.includes(marker));
+            if (mine) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: mine.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number: pr.number, body });
+            }
