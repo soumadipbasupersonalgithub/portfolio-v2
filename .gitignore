@@ -12,6 +12,16 @@ dist
 dist-ssr
 *.local
 
+# Test & CI outputs (visual baselines are generated locally / taken from CI artifacts)
+test-results/
+tests/visual/__screenshots__/
+playwright-report/
+blob-report/
+.lighthouseci/
+lhci-report/
+preview.log
+.pr-close-comment.json
+
 # Environment variables (never commit secrets)
 .env
 .env.local

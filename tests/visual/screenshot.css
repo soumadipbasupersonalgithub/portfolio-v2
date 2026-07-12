@@ -1,0 +1,57 @@
+/*
+ * Applied ONLY while Playwright takes screenshots (expect.toHaveScreenshot
+ * stylePath in playwright.config.ts). Freezes elements whose CONTENT AND SIZE
+ * change over time, so layout is identical in every capture. Without this the
+ * hero's simulated test console grows/shrinks as rows are appended (~35px),
+ * shifting the whole document below it between captures.
+ */
+
+/* Simulated test-run console: rows are appended by JS on a timer. Pin the
+   box so layout can't shift, and blank the time-varying content. */
+#runBody {
+  height: 104px !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+}
+
+/* Progress bar animates 0 → 94% width. */
+#runBar {
+  visibility: hidden !important;
+}
+
+/* Typing animation: text length changes line count (and box height) on
+   narrow viewports. Pin the card and blank the text. */
+.hero-whoami {
+  height: 7em !important;
+  overflow: hidden !important;
+}
+#typed,
+.typed-cursor {
+  visibility: hidden !important;
+}
+
+/* Count-up stat numbers. */
+.hero-stat-num {
+  visibility: hidden !important;
+}
+
+/* Animated CI-pipeline chips (work section): JS re-styles them every 780ms,
+   which `animations: disabled` cannot stop. Blank them; boxes keep layout. */
+[data-stage] {
+  visibility: hidden !important;
+}
+
+/* Fixed-position overlays (nav bar, resume FAB, scroll-top, chatbot): where
+   they land inside a tall section's screenshot depends on the exact scroll
+   offset during capture, which is not perfectly reproducible — they showed
+   up as "ghosts" at two positions in diffs. They are position:fixed, so
+   hiding them cannot affect document layout; their behavior is covered by
+   the functional suite instead. */
+.nav,
+.cv-fab,
+.scroll-top,
+.chatbot-fab,
+.chatbot-window,
+.chatbot-backdrop {
+  visibility: hidden !important;
+}
