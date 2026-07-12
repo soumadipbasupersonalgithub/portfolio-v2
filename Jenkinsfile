@@ -1,16 +1,26 @@
 /*
  * Quality gate for portfolio-v2 pull requests.
  *
- * Stages: Checkout → Install → Build & Serve → Playwright functional →
- * Playwright visual → Lighthouse CI → publish reports → GitHub commit
- * status → (optional) auto-close PR on failure.
+ * Flow: Checkout → Install → Build → Playwright functional → Playwright
+ * visual → Lighthouse → publish reports → GitHub commit status →
+ * (optional) auto-close PR on failure.
+ *
+ * Dual-mode agent — decided at runtime:
+ *  - Linux node with Docker: everything runs inside the official Playwright
+ *    image (browsers preinstalled, deterministic rendering, `linux` visual
+ *    baselines). Preferred for a dedicated CI box.
+ *  - Anything else (e.g. a Windows machine running Jenkins directly): the
+ *    gate runs on the node itself; Playwright browsers are installed once
+ *    and cached, and visual baselines for that platform (e.g. `win32`) gate
+ *    the build. `sh` steps require Git Bash on the Jenkins PATH (Windows).
+ *    Note: `agent { docker }` cannot work from a Windows controller — the
+ *    plugin mounts Windows workspace paths into Linux containers.
  *
  * Requirements (see docs/JENKINS_SETUP.md):
- *  - Docker available on the Jenkins agent (Playwright image = browsers preinstalled).
- *  - A "Secret text" credential with ID `github-pat` holding a GitHub PAT
- *    (classic: `repo` scope; fine-grained: Statuses RW + Pull requests RW).
+ *  - A "Secret text" credential with ID `github-pat` holding a GitHub token
+ *    (classic PAT `repo` scope; fine-grained: Statuses RW + Pull requests RW).
  *  - Plugins: GitHub, GitHub Branch Source, Pipeline, Docker Pipeline,
- *    Credentials Binding, HTML Publisher, JUnit.
+ *    Credentials Binding, HTML Publisher, JUnit, Workspace Cleanup.
  *
  * Toggle: set env var AUTO_CLOSE_ON_FAILURE=true (Manage Jenkins → System →
  * Global properties → Environment variables, or per-job) to close PRs whose
@@ -26,12 +36,14 @@ def githubStatus(String state, String description) {
   }
   withCredentials([string(credentialsId: 'github-pat', variable: 'GITHUB_TOKEN')]) {
     withEnv(["GH_STATE=${state}", "GH_DESC=${description}"]) {
+      // Best-effort: a GitHub API hiccup must never fail the build itself.
       sh label: "GitHub status: ${state}", script: '''
         curl -sf -o /dev/null -X POST \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer $GITHUB_TOKEN" \
           "$GITHUB_API/repos/$REPO_SLUG/statuses/$COMMIT_SHA" \
-          -d "{\\"state\\":\\"$GH_STATE\\",\\"context\\":\\"$STATUS_CONTEXT\\",\\"description\\":\\"$GH_DESC\\",\\"target_url\\":\\"$BUILD_URL\\"}"
+          -d "{\\"state\\":\\"$GH_STATE\\",\\"context\\":\\"$STATUS_CONTEXT\\",\\"description\\":\\"$GH_DESC\\",\\"target_url\\":\\"$BUILD_URL\\"}" \
+          || echo "WARNING: could not post GitHub commit status ($GH_STATE)"
       '''
     }
   }
@@ -73,19 +85,87 @@ def autoClosePrIfEnabled() {
   echo "PR #${env.CHANGE_ID} closed (AUTO_CLOSE_ON_FAILURE=true)."
 }
 
-pipeline {
-  // Playwright image ships all browsers + deps. Tag MUST match the
-  // @playwright/test version pinned in package.json (currently 1.61.1).
-  // No Docker? See docs/JENKINS_SETUP.md §"Running without Docker".
-  agent {
-    docker {
-      image 'mcr.microsoft.com/playwright:v1.61.1-noble'
-      args '-u root:root --ipc=host'
+// The gate itself — identical steps in container and host mode.
+def runQualityGate(boolean inContainer) {
+  stage('Install') {
+    sh 'node --version && npm --version'
+    sh 'npm ci'
+    if (!inContainer) {
+      // Host mode: the Playwright image isn't in play, so make sure the
+      // browsers exist (no-op after the first build — they're cached).
+      sh 'npx playwright install chromium webkit'
     }
   }
 
+  stage('Build') {
+    // No .env in CI: the site builds with empty API keys, which is fine —
+    // tests mock external APIs instead of calling them.
+    sh 'npm run build'
+  }
+
+  stage('Playwright — functional') {
+    sh 'npx playwright test tests/functional'
+  }
+
+  stage('Playwright — visual regression') {
+    // Baselines are per platform; only the current platform's gate this run.
+    def platform = inContainer
+      ? 'linux'
+      : sh(script: 'node -p "process.platform"', returnStdout: true).trim()
+    def hasBaselines = sh(
+      script: "ls tests/visual/__screenshots__/*/${platform}/*.png >/dev/null 2>&1",
+      returnStatus: true
+    ) == 0
+    if (hasBaselines) {
+      // Strict: any pixel diff beyond the tolerance fails the build.
+      sh 'npx playwright test tests/visual'
+    } else {
+      // First run on this platform: Playwright writes the missing baselines
+      // but reports the tests as failed ("snapshot doesn't exist"). Tolerate
+      // that once — mark UNSTABLE and hand the baselines over as artifacts.
+      catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+        sh 'npx playwright test tests/visual'
+      }
+      archiveArtifacts artifacts: 'tests/visual/__screenshots__/**', allowEmptyArchive: true
+      unstable("No ${platform} visual baselines existed — they were auto-created. Download tests/visual/__screenshots__/** from this build's artifacts and commit them.")
+    }
+  }
+
+  stage('Lighthouse') {
+    if (inContainer) {
+      // Reuse Playwright's Chromium; LHCI manages the preview server itself.
+      sh label: 'lhci autorun', script: '''
+        export CHROME_PATH="$(node -e "console.log(require('playwright-core').chromium.executablePath())")"
+        npx lhci autorun --config=lighthouserc.cjs
+      '''
+    } else {
+      // Windows host: chrome-launcher crashes cleaning its temp profile
+      // AFTER the audit completes and the report is written (EPERM, known
+      // upstream bug). Run lighthouse directly, tolerate the exit code, and
+      // assert the written scores against the same thresholds.
+      sh label: 'lighthouse ×3 + assert', script: '''
+        export CHROME_PATH="$(node -e "console.log(require('playwright-core').chromium.executablePath())")"
+        node node_modules/vite/bin/vite.js preview --port 4173 --strictPort > preview.log 2>&1 &
+        SRV=$!
+        trap "kill $SRV 2>/dev/null || true" EXIT
+        sleep 3
+        rm -rf lhci-report && mkdir -p lhci-report
+        for i in 1 2 3; do
+          npx lighthouse "$SITE_URL" --chrome-flags="--no-sandbox --headless=new" \
+            --output json --output html --output-path "lhci-report/run-$i" --quiet \
+            || echo "lighthouse run $i exited nonzero (tolerated on Windows — report is still written)"
+        done
+        node scripts/assert-lighthouse.cjs lhci-report/run-*.report.json
+      '''
+    }
+  }
+}
+
+pipeline {
+  agent any
+
   options {
-    timeout(time: 30, unit: 'MINUTES')
+    timeout(time: 45, unit: 'MINUTES')
     buildDiscarder(logRotator(numToKeepStr: '25'))
     disableConcurrentBuilds(abortPrevious: true)
   }
@@ -95,6 +175,8 @@ pipeline {
     GITHUB_API = 'https://api.github.com'
     STATUS_CONTEXT = 'ci/jenkins/quality-gate'         // name used in branch protection
     SITE_URL = 'http://127.0.0.1:4173/portfolio-v2/'   // must match tests/config.ts
+    // Tag MUST match the @playwright/test version pinned in package.json.
+    PLAYWRIGHT_IMAGE = 'mcr.microsoft.com/playwright:v1.61.1-noble'
     // Inherit the toggle from Jenkins global/job env; default off.
     AUTO_CLOSE_ON_FAILURE = "${env.AUTO_CLOSE_ON_FAILURE ?: 'false'}"
   }
@@ -109,80 +191,36 @@ pipeline {
             returnStdout: true
           ).trim()
           // PR builds may check out an ephemeral merge commit; the status
-          // must land on the PR head (second parent). Branch builds use HEAD.
+          // must land on the PR head (second parent). Branch builds — and
+          // PR builds with head-revision discovery — use HEAD. --verify -q
+          // is essential: plain rev-parse echoes the unresolvable ref to
+          // stdout, corrupting the captured value.
           if (env.CHANGE_ID) {
-            env.COMMIT_SHA = sh(script: 'git rev-parse HEAD^2 2>/dev/null || git rev-parse HEAD', returnStdout: true).trim()
+            env.COMMIT_SHA = sh(script: 'git rev-parse --verify --quiet HEAD^2 || git rev-parse HEAD', returnStdout: true).trim()
           } else {
             env.COMMIT_SHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
           }
           echo "Repo: ${env.REPO_SLUG} · Commit: ${env.COMMIT_SHA} · PR: ${env.CHANGE_ID ?: 'n/a'} · auto-close: ${env.AUTO_CLOSE_ON_FAILURE}"
         }
-        githubStatus('pending', 'Quality gate running…')
+        githubStatus('pending', 'Quality gate running')
       }
     }
 
-    stage('Install') {
-      steps {
-        sh 'node --version && npm --version'
-        sh 'npm ci'
-      }
-    }
-
-    stage('Build & Serve') {
-      steps {
-        // No .env in CI: the site builds with empty API keys, which is fine —
-        // tests mock external APIs instead of calling them.
-        sh 'npm run build'
-        sh label: 'Start static server for the PR build', script: '''
-          nohup npx vite preview --host 0.0.0.0 --port 4173 --strictPort > preview.log 2>&1 &
-          for i in $(seq 1 30); do
-            if curl -sf -o /dev/null "$SITE_URL"; then echo "Server is up: $SITE_URL"; exit 0; fi
-            sleep 1
-          done
-          echo 'Server failed to start:' && cat preview.log && exit 1
-        '''
-      }
-    }
-
-    stage('Playwright — functional (desktop/tablet/mobile)') {
-      steps {
-        sh 'npx playwright test tests/functional'
-      }
-    }
-
-    stage('Playwright — visual regression') {
+    stage('Quality gate') {
       steps {
         script {
-          // CI runs on Linux, so only Linux baselines gate the build.
-          def hasBaselines = sh(
-            script: 'ls tests/visual/__screenshots__/*/linux/*.png >/dev/null 2>&1',
-            returnStatus: true
-          ) == 0
-          if (hasBaselines) {
-            // Strict: any pixel diff beyond the tolerance fails the build.
-            sh 'npx playwright test tests/visual'
-          } else {
-            // First run: Playwright writes the missing baselines but reports
-            // the tests as failed ("snapshot doesn't exist"). Tolerate that
-            // once — mark UNSTABLE and hand the baselines over as artifacts.
-            catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-              sh 'npx playwright test tests/visual'
+          boolean linuxDocker = isUnix() &&
+            sh(script: 'docker version >/dev/null 2>&1', returnStatus: true) == 0
+          if (linuxDocker) {
+            echo "Running inside ${env.PLAYWRIGHT_IMAGE}"
+            docker.image(env.PLAYWRIGHT_IMAGE).inside('-u root:root --ipc=host') {
+              runQualityGate(true)
             }
-            archiveArtifacts artifacts: 'tests/visual/__screenshots__/**', allowEmptyArchive: true
-            unstable('No visual baselines existed — they were auto-created. Download tests/visual/__screenshots__/** from this build\'s artifacts and commit them to lock in the current look.')
+          } else {
+            echo 'No Linux Docker on this node — running the gate directly on the host (browsers cached after the first build).'
+            runQualityGate(false)
           }
         }
-      }
-    }
-
-    stage('Lighthouse CI') {
-      steps {
-        // Reuse Playwright's Chromium so no separate Chrome install is needed.
-        sh label: 'Run Lighthouse assertions', script: '''
-          export CHROME_PATH="$(node -e "console.log(require('playwright-core').chromium.executablePath())")"
-          echo "Lighthouse using Chrome at: $CHROME_PATH"
-          LHCI_URL="$SITE_URL" npx lhci autorun --config=lighthouserc.cjs
-        '''
       }
     }
   }
@@ -209,14 +247,14 @@ pipeline {
       ])
     }
     success {
-      githubStatus('success', 'All checks passed — functional, visual, and Lighthouse.')
+      githubStatus('success', 'All checks passed: functional, visual, and Lighthouse.')
     }
     unstable {
       // Tests passed; new visual baselines were created (first run).
-      githubStatus('success', 'Checks passed — new visual baselines created, commit them from build artifacts.')
+      githubStatus('success', 'Checks passed. New visual baselines created - commit them from build artifacts.')
     }
     failure {
-      githubStatus('failure', 'Quality gate failed — see Jenkins build for reports.')
+      githubStatus('failure', 'Quality gate failed - see Jenkins build for reports.')
       script { autoClosePrIfEnabled() }
     }
     aborted {

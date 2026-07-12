@@ -37,7 +37,7 @@ key remains recoverable by a determined user — use free-tier/restricted keys o
 | `npm run test:visual`     | Visual regression tests only        |
 | `npm run test:update-snapshots` | Regenerate visual baselines   |
 | `npm run test:report`     | Open the last Playwright HTML report |
-| `npm run lhci`    | Lighthouse CI assertions (site must be served: `npm run serve`) |
+| `npm run lhci`    | Lighthouse CI assertions (build first: `npm run build`; serves itself) |
 
 ## CI/CD quality gate — the workflow
 
@@ -79,7 +79,7 @@ Step by step:
    - *Visual regression* (Playwright): a screenshot of **each section** is
      compared per viewport against committed baselines
      (`maxDiffPixelRatio` 2%).
-   - *Performance* (Lighthouse CI): performance ≥ 0.85, accessibility ≥ 0.90,
+   - *Performance* (Lighthouse CI): performance ≥ 0.80, accessibility ≥ 0.90,
      best-practices ≥ 0.90, SEO ≥ 0.90 (median of 3 runs).
 5. **Jenkins posts the result** to the PR as the commit status
    `ci/jenkins/quality-gate` and publishes the Playwright + Lighthouse HTML

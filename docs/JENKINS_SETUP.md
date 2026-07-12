@@ -25,11 +25,17 @@ dependencies are preinstalled and CI rendering is deterministic.
 1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) with the **WSL 2** backend, and keep it in **Linux containers** mode (the default).
 2. Make sure the account running the Jenkins service can reach Docker: run `docker version` in a terminal; if Jenkins runs as `LocalSystem` and can't find Docker, the simplest fix is to run Jenkins as your own user (Services → Jenkins → Log On).
 
-> **Running without Docker** (fallback): change the agent in the
-> `Jenkinsfile` from the `docker { … }` block to `agent any`, and add
-> `sh 'npx playwright install --with-deps'` after `npm ci` in the Install
-> stage. You also need Node.js 22+ on the Jenkins machine. Docker is strongly
-> preferred: identical rendering per run, and visual baselines stay stable.
+> **Running without Docker** — automatic. The pipeline detects at runtime
+> whether Linux-Docker is available: if yes, everything runs inside the
+> Playwright image (preferred — deterministic rendering, `linux` visual
+> baselines); if not (e.g. Jenkins on this Windows machine), the gate runs
+> directly on the host — Playwright browsers are installed once and cached,
+> and that platform's committed baselines (e.g. `win32`) gate the build.
+> Host mode needs Node.js 22+ and, on Windows, Git Bash on the Jenkins PATH
+> (the provided `start-jenkins.bat` handles this).
+> Note: `agent { docker }` can never work from a Windows controller — the
+> plugin mounts Windows workspace paths into Linux containers — which is why
+> the detection requires a *Linux* node, not just a working `docker` CLI.
 
 ## 2. Install required plugins
 
@@ -159,5 +165,5 @@ the periodic scan catches anything missed.
 | Status check never appears on the PR | First build must complete once; also confirm the `github-pat` credential ID matches exactly |
 | `EACCES`/permission errors in workspace | The pipeline runs as root in the container (`-u root:root` arg) — check the arg wasn't removed |
 | Lighthouse "Chrome not found" | The pipeline exports `CHROME_PATH` from Playwright's Chromium — check the Install stage ran `npm ci` successfully |
-| `npm run lhci` crashes locally on **Windows** with `EPERM … Temp\lighthouse.*` | Known chrome-launcher issue: the audit completes but temp-profile cleanup races with antivirus file locks. Harmless in CI (Linux). Locally, either rely on CI or run LHCI inside the Playwright Docker image |
+| `npm run lhci` crashes locally on **Windows** with `EPERM … Temp\lighthouse.*` | Known chrome-launcher issue: the audit completes but temp-profile cleanup races with antivirus file locks. The pipeline's host mode works around it (runs `lighthouse` directly + `scripts/assert-lighthouse.cjs`); `lhci autorun` itself is only used in container mode (Linux) |
 | Visual tests fail after a dependency/browser update | Rendering changed with the browser — regenerate baselines (README §Visual baselines) and review the diff |
