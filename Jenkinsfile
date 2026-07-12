@@ -202,7 +202,7 @@ pipeline {
           }
           echo "Repo: ${env.REPO_SLUG} · Commit: ${env.COMMIT_SHA} · PR: ${env.CHANGE_ID ?: 'n/a'} · auto-close: ${env.AUTO_CLOSE_ON_FAILURE}"
         }
-        githubStatus('pending', 'Quality gate running…')
+        githubStatus('pending', 'Quality gate running')
       }
     }
 
@@ -247,14 +247,14 @@ pipeline {
       ])
     }
     success {
-      githubStatus('success', 'All checks passed — functional, visual, and Lighthouse.')
+      githubStatus('success', 'All checks passed: functional, visual, and Lighthouse.')
     }
     unstable {
       // Tests passed; new visual baselines were created (first run).
-      githubStatus('success', 'Checks passed — new visual baselines created, commit them from build artifacts.')
+      githubStatus('success', 'Checks passed. New visual baselines created - commit them from build artifacts.')
     }
     failure {
-      githubStatus('failure', 'Quality gate failed — see Jenkins build for reports.')
+      githubStatus('failure', 'Quality gate failed - see Jenkins build for reports.')
       script { autoClosePrIfEnabled() }
     }
     aborted {
