@@ -46,6 +46,11 @@ self-hosted **Jenkins** pipeline before it can be merged. Merging is enforced
 by a required GitHub status check — a red pipeline means the merge button is
 disabled.
 
+> 🎬 **Prefer to watch it?** Open
+> [docs/workflow-guide.html](docs/workflow-guide.html) in a browser — an
+> animated, interactive walkthrough that simulates a build (including the
+> failure path) and shows the architecture at a glance.
+
 ```mermaid
 flowchart LR
     A[PR opened / updated] --> B[AI code review<br/>Claude Code / Codex]
@@ -173,6 +178,21 @@ baselines never collide. The **Linux** ones are the merge gate.
 Set it in Jenkins under *Manage Jenkins → System → Global properties →
 Environment variables* — see
 [docs/JENKINS_SETUP.md](docs/JENKINS_SETUP.md#the-auto-close-toggle).
+
+### PR automation bots
+
+Two GitHub Actions workflows assist every pull request alongside the Jenkins gate:
+
+- **PR bot** ([.github/workflows/pr-bot.yml](.github/workflows/pr-bot.yml)) —
+  labels each PR by size (`size/XS`…`size/XL`) and touched areas
+  (`area/site`, `area/tests`, `area/ci`, `area/docs`), and maintains one
+  sticky comment explaining the quality gate and what to do when it goes red.
+  Runs on the built-in `GITHUB_TOKEN`; no setup needed.
+- **Claude PR review**
+  ([.github/workflows/claude-code-review.yml](.github/workflows/claude-code-review.yml)) —
+  Claude reviews every non-draft PR and posts inline comments plus a summary.
+  Needs one repository secret: `gh secret set ANTHROPIC_API_KEY`. Add the
+  `skip-claude-review` label to a PR to opt out.
 
 ## Structure
 ```

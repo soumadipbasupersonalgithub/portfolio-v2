@@ -1,0 +1,58 @@
+# Claude reviews every PR automatically and posts inline comments.
+# Requires the ANTHROPIC_API_KEY repository secret:
+#   gh secret set ANTHROPIC_API_KEY
+# (or Settings → Secrets and variables → Actions → New repository secret)
+name: Claude PR Review
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+jobs:
+  claude-review:
+    # Skip drafts; skip PRs labeled 'skip-claude-review'
+    if: >-
+      github.event.pull_request.draft == false &&
+      !contains(github.event.pull_request.labels.*.name, 'skip-claude-review')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          track_progress: true
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            You are reviewing a PR for a Vite-based portfolio site with a Jenkins
+            quality gate (Playwright functional + visual tests, Lighthouse CI).
+
+            Review this pull request with a focus on:
+            - Correctness bugs and edge cases
+            - Security implications (this is a public static site — no secrets may
+              ever be committed; API keys belong in .env / Jenkins credentials)
+            - Test coverage: do the changes need new/updated Playwright specs or
+              visual baselines (tests/visual/__screenshots__)?
+            - Pipeline impact: changes to Jenkinsfile, playwright.config.ts, or
+              lighthouserc.cjs deserve extra scrutiny
+
+            Report every issue you find, including ones you are uncertain about or
+            consider low-severity, with your confidence and an estimated severity.
+
+            The PR branch is already checked out in the current working directory.
+            Use `gh pr comment` for a short top-level summary.
+            Use `mcp__github_inline_comment__create_inline_comment` (with
+            `confirmed: true`) to flag specific lines.
+            Only post GitHub comments — don't submit review text as messages.
+
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
