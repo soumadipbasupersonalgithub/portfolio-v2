@@ -21,6 +21,9 @@ module.exports = {
     collect: {
       url: [TARGET_URL],
       numberOfRuns: 3, // median of 3 runs smooths out noise
+      // LHCI starts/stops the preview server itself (build first: `npm run build`)
+      startServerCommand: 'npm run preview -- --port 4173 --strictPort',
+      startServerReadyPattern: 'Local:',
       settings: {
         // CHROME_PATH env var (set by the Jenkins pipeline to Playwright's
         // Chromium) takes precedence; locally your installed Chrome is found.
@@ -41,3 +44,7 @@ module.exports = {
     },
   },
 };
+
+// Shared with scripts/assert-lighthouse.cjs (used on Windows hosts, where
+// `lhci autorun` dies in chrome-launcher's temp cleanup after the audit).
+module.exports.thresholds = THRESHOLDS;

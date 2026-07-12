@@ -37,7 +37,7 @@ key remains recoverable by a determined user — use free-tier/restricted keys o
 | `npm run test:visual`     | Visual regression tests only        |
 | `npm run test:update-snapshots` | Regenerate visual baselines   |
 | `npm run test:report`     | Open the last Playwright HTML report |
-| `npm run lhci`    | Lighthouse CI assertions (site must be served: `npm run serve`) |
+| `npm run lhci`    | Lighthouse CI assertions (build first: `npm run build`; serves itself) |
 
 ## CI/CD quality gate — the workflow
 
