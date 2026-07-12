@@ -12,9 +12,8 @@ dist
 dist-ssr
 *.local
 
-# Test & CI outputs (visual baselines are generated locally / taken from CI artifacts)
+# Test & CI outputs (visual baselines in tests/visual/__screenshots__ ARE committed)
 test-results/
-tests/visual/__screenshots__/
 playwright-report/
 blob-report/
 .lighthouseci/
