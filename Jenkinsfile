@@ -36,12 +36,14 @@ def githubStatus(String state, String description) {
   }
   withCredentials([string(credentialsId: 'github-pat', variable: 'GITHUB_TOKEN')]) {
     withEnv(["GH_STATE=${state}", "GH_DESC=${description}"]) {
+      // Best-effort: a GitHub API hiccup must never fail the build itself.
       sh label: "GitHub status: ${state}", script: '''
         curl -sf -o /dev/null -X POST \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer $GITHUB_TOKEN" \
           "$GITHUB_API/repos/$REPO_SLUG/statuses/$COMMIT_SHA" \
-          -d "{\\"state\\":\\"$GH_STATE\\",\\"context\\":\\"$STATUS_CONTEXT\\",\\"description\\":\\"$GH_DESC\\",\\"target_url\\":\\"$BUILD_URL\\"}"
+          -d "{\\"state\\":\\"$GH_STATE\\",\\"context\\":\\"$STATUS_CONTEXT\\",\\"description\\":\\"$GH_DESC\\",\\"target_url\\":\\"$BUILD_URL\\"}" \
+          || echo "WARNING: could not post GitHub commit status ($GH_STATE)"
       '''
     }
   }
@@ -189,9 +191,12 @@ pipeline {
             returnStdout: true
           ).trim()
           // PR builds may check out an ephemeral merge commit; the status
-          // must land on the PR head (second parent). Branch builds use HEAD.
+          // must land on the PR head (second parent). Branch builds — and
+          // PR builds with head-revision discovery — use HEAD. --verify -q
+          // is essential: plain rev-parse echoes the unresolvable ref to
+          // stdout, corrupting the captured value.
           if (env.CHANGE_ID) {
-            env.COMMIT_SHA = sh(script: 'git rev-parse HEAD^2 2>/dev/null || git rev-parse HEAD', returnStdout: true).trim()
+            env.COMMIT_SHA = sh(script: 'git rev-parse --verify --quiet HEAD^2 || git rev-parse HEAD', returnStdout: true).trim()
           } else {
             env.COMMIT_SHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
           }
