@@ -1,7 +1,10 @@
 # Claude reviews every PR automatically and posts inline comments.
-# Requires the ANTHROPIC_API_KEY repository secret:
-#   gh secret set ANTHROPIC_API_KEY
-# (or Settings → Secrets and variables → Actions → New repository secret)
+#
+# One-time setup (both required):
+#   1. Install the Claude GitHub App on this repo: https://github.com/apps/claude
+#   2. Add ONE auth secret — either:
+#      gh secret set ANTHROPIC_API_KEY          (API key from console.anthropic.com)
+#      gh secret set CLAUDE_CODE_OAUTH_TOKEN    (Pro/Max subscription: run `claude setup-token`)
 name: Claude PR Review
 
 on:
@@ -27,7 +30,9 @@ jobs:
 
       - uses: anthropics/claude-code-action@v1
         with:
+          # Either secret works — set one (see header comment).
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           track_progress: true
           prompt: |
             REPO: ${{ github.repository }}
